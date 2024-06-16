@@ -1,6 +1,7 @@
 package jframe;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -17,19 +18,28 @@ public class JTableTest extends JFrame implements MouseListener, KeyListener {
   private JButton addBtn;
   private JButton delBtn;
 
-  public JTableTest(String table){
-    setLayout(new BorderLayout(10,10));
+  public JTableTest(String title) {
+    setLayout(new BorderLayout(10, 10));
 
     JPanel topPanel = new JPanel(new GridLayout(6, 4, 10, 5));
 
     for (int i = 0; i < 6; i++) {
       topPanel.add(new JLabel(labels[i]));
-      fields[i] = new JTextField(30);
+      fields[i] = new JTextField(30); // 3이나 30이나 .. 무슨차이일까
       topPanel.add(fields[i]);
     }
 
-    topPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-    this.add("North",topPanel);
+    topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    this.add("North", topPanel); // 가장 위쪽 판넬 생성
+
+    String[] header = {"Name", "Age", "Sex", "Korean", "English", "Math"};
+    DefaultTableModel model = new DefaultTableModel(header, 0);//header추가, 행은 0개 지정
+
+    table = new JTable(model);
+    table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    scrolledTable = new JScrollPane(table); // 스크롤 적용을 위한 JScrollPane 사용
+    scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    add("Center", scrolledTable);
 
     // 보여지는 부분
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
