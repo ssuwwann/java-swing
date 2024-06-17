@@ -74,7 +74,33 @@ public class JTableTest extends JFrame implements MouseListener, KeyListener {
 		setSize(620, 400);
 		setLocationRelativeTo(null);
 		setVisible(true);
+	}
 
+	// 추가버튼이나 텍스트 필드에서 엔터가 눌리는 순간 addRecord 호출,
+	public void addRecord() {
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		String[] record = new String[6];
+
+		for (int i = 0; i < 6; i++) {
+			if (isInvaildInput(fields[i].getText())) {
+				System.out.println("Invalid Input");
+				return;
+			}
+			record[i] = fields[i].getText();
+		}
+		model.addRow(record);
+
+		// 행 추가하고 필드 초기화
+		for (int i = 0; i < 6; i++) {
+			fields[i].setText("");
+		}
+
+		// 이후 첫 번째 필드에 포커스
+		fields[0].requestFocus();
+	}
+
+	private boolean isInvaildInput(String input) {
+		return input == null || input.length() == 0;
 	}
 
 	@Override
@@ -87,14 +113,25 @@ public class JTableTest extends JFrame implements MouseListener, KeyListener {
 
 	}
 
+	// 키보드를 눌렀을 때, Pressed가 아니고 왜 여기에?
 	@Override
 	public void keyReleased(KeyEvent e) {
-
+		System.out.println("키 릴리즈드");
+		int keyCode = e.getKeyCode();
+		if (keyCode == KeyEvent.VK_ENTER) {
+			addRecord();
+		}
 	}
 
+	// 추가 버튼이 클릭되었을 때,
 	@Override
 	public void mouseClicked(MouseEvent e) {
-
+		Object src = e.getSource();
+		System.out.println("추가버튼 클릭 => " + src);
+		System.out.println("AddBtn => " + addBtn);
+		if (src == addBtn) {
+			addRecord();
+		}
 	}
 
 	@Override
