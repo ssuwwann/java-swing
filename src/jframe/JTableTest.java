@@ -103,13 +103,19 @@ public class JTableTest extends JFrame implements MouseListener, KeyListener {
 	public void removeRecord(int index) {
 		// 선택된 행이 없다면 가장 위의 행을 제거하고, 삭제할게 없다면 -1 값을 가진다.
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		if (index < 0) { // 이 조건이 왜 필요할까? => 마지막에 -1값을 가질 테니까,
+		if (index < 0) {
 			if (table.getRowCount() == 0) { // 비어있는 테이블이면,
 				return;
 			}
 			index = 0;
 		}
 		model.removeRow(index);
+	}
+
+	// 읽기 => 이걸 위해 셀의 위치를 알아야한다. => 즉, 행, 열의 위치를 얻어야 한다.
+	public void printCell(int row, int col) {
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		System.out.println(model.getValueAt(row, col)); // => 셀 위치 확인
 	}
 
 	private boolean isInvaildInput(String input) {
@@ -147,6 +153,13 @@ public class JTableTest extends JFrame implements MouseListener, KeyListener {
 			int selected = table.getSelectedRow();
 			System.out.println("선택된 행 인덱스: " + selected);
 			removeRecord(selected);
+		}
+
+		if (src == table) {
+			int row = table.getSelectedRow();
+			int col = table.getSelectedColumn();
+
+			printCell(row, col);
 		}
 
 	}
