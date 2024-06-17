@@ -99,6 +99,19 @@ public class JTableTest extends JFrame implements MouseListener, KeyListener {
 		fields[0].requestFocus();
 	}
 
+	// 행 제거
+	public void removeRecord(int index) {
+		// 선택된 행이 없다면 가장 위의 행을 제거하고, 삭제할게 없다면 -1 값을 가진다.
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		if (index < 0) { // 이 조건이 왜 필요할까? => 마지막에 -1값을 가질 테니까,
+			if (table.getRowCount() == 0) { // 비어있는 테이블이면,
+				return;
+			}
+			index = 0;
+		}
+		model.removeRow(index);
+	}
+
 	private boolean isInvaildInput(String input) {
 		return input == null || input.length() == 0;
 	}
@@ -116,7 +129,6 @@ public class JTableTest extends JFrame implements MouseListener, KeyListener {
 	// 키보드를 눌렀을 때, Pressed가 아니고 왜 여기에?
 	@Override
 	public void keyReleased(KeyEvent e) {
-		System.out.println("키 릴리즈드");
 		int keyCode = e.getKeyCode();
 		if (keyCode == KeyEvent.VK_ENTER) {
 			addRecord();
@@ -127,11 +139,16 @@ public class JTableTest extends JFrame implements MouseListener, KeyListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		Object src = e.getSource();
-		System.out.println("추가버튼 클릭 => " + src);
-		System.out.println("AddBtn => " + addBtn);
 		if (src == addBtn) {
 			addRecord();
 		}
+
+		if (src == delBtn) {
+			int selected = table.getSelectedRow();
+			System.out.println("선택된 행 인덱스: " + selected);
+			removeRecord(selected);
+		}
+
 	}
 
 	@Override
